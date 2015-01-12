@@ -1,0 +1,25 @@
+!!! 5
+%html
+  %head
+    %title
+      Edu-online
+    %meta{charset: 'utf-8'}
+    %meta{name: 'viewport', content: "width=device-width, initial-scale=1.0"}
+    = stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = csrf_meta_tags
+  %body
+    #wrap
+      - if params[:action] != 'show'
+        .navbar
+          .container
+            .navbar-brand2
+              = link_to root_path, class: 'brand' do
+                Institute Control Engineering and Information Technology.
+                Stud-online
+      .container.main
+        = render 'layouts/flash_messages'
+        = yield
+    - if params[:action] != 'show'
+      %footer#footer
+        = render 'layouts/footer'

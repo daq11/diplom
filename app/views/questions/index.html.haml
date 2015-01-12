@@ -1,0 +1,33 @@
+%h1
+  = 'Вопросы для ' + @presentation.comment + '(' + @presentation.id.to_s + ')'
+
+
+%table.table
+  %thead
+    %tr
+      %th Вопрос
+      %th Тип ответа
+      %th Правильные ответы
+      %th После слайда
+      %th
+      %th
+      %th
+      
+  %tbody
+    - @questions.each do |question|
+      %tr
+        %td= question.name
+        %td= question.answerTypeHumanString
+        %td= question.getRightAnswerList
+        %td= question.position
+        %td= link_to 'Ответить', question
+        %td= link_to 'Изменить', edit_question_path(question)
+        %td= link_to 'Удалить', question, :method => :delete, :data => { :confirm => 'Вы уверены?' }
+
+%br
+
+= link_to 'Новый вопрос', new_question_path(:presentation_id => @presentation_id)
+%br
+= link_to 'К списку презентаций', presentations_path
+%br
+= link_to 'К презентации', presentation_path(@presentation)

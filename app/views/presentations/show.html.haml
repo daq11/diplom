@@ -1,0 +1,21 @@
+= show_link
+- if @question.nil?
+  .reveal(class="animated bounceInRight")
+    .slides
+      %section(style='display: block;'){class: @background.nil? ? 'none' : @background}
+        .present{data: {id: @presentation.id, slide: @slide, count: @tutor ? @presentation.document.sections.size : @presentation.last_open_slide + 1}}
+          = find_and_preserve do
+            = raw @section.source
+
+  - if @tutor
+    = find_and_preserve do
+      #next-slide.next-color.next-slide
+        = raw @next_source
+
+  .slide-bottom(style="display: none;")
+    = show_link
+- else
+  .reveal(class="animated bounceInRight")
+    .slides
+      %section(style='display: block;'){class: @background.nil? ? 'none' : @background}
+        = render @question

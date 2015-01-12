@@ -1,0 +1,14 @@
+ru:
+  activerecord:
+    models:
+      question: 'Вопрос'
+    attributes:
+      presentation:
+        last_open_slide: 'Последний видимый слайд'
+      question:
+        name: 'Вопрос'
+        answer_type: 'Тип ответа'
+        answer_array: 'Ответы'
+        presentation: 'Презентация'
+        presentation_id: 'Презентация'
+        position: 'После слайда'

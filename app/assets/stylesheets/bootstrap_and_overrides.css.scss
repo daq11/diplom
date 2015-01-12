@@ -1,0 +1,95 @@
+$font-size-base: 19px;
+
+@import "bootstrap";
+@import "presentations.css.scss";
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: $screen-md-min) { 
+  body {
+    font-size: 14px;
+  }  
+  .btn {
+    font-size: inherit;
+  }  
+  .form-control {
+    font-size: inherit;
+    height: inherit;
+  }
+
+}
+
+$msiu-red: #992441;
+$msiu-gray: #A5A7AA;
+$darkblue: #34495e;
+$clouds: #ecf0f1;
+
+.navbar-brand2 {
+  @extend .navbar-brand;
+  font-size: 12px;
+}
+
+.navbar-msiu {
+  background-color: $darkblue;
+  font-weight: 300;
+  font-size: 1.5em;
+  a {
+    color: $msiu-gray;
+    &:hover, &:focus, &.active {
+      background: rgba(0, 0, 0, 0.2) !important;
+      color: $clouds;
+    }
+  }
+}
+
+a.nounderline {
+  text-decoration: none;
+  &:hover, &:active {
+    text-decoration: none;
+  }
+}
+
+.justify {
+  text-align: justify;
+}
+
+a.brand {
+  @extend a.nounderline;
+  color: $msiu-gray;
+  @include transition(all 1s);
+  &:hover {
+    color: $msiu-red;    
+    @include transition(all .5s);
+  }
+}
+
+a.margin {
+  margin-top: 16px;
+  margin-bottom: 16px;       
+}
+
+.row {
+    padding-top: 7px;
+  &:first-child {
+    padding-top: 0;
+  }
+  &:hover {
+    background-color: white;
+  }
+}
+
+blockquote {
+    font-size: inherit;
+    font-style: italic;
+}
+
+.next-slide {
+   display: none;
+}
+
+.stud-next-slide {
+   display: none;
+}
+
+.next-color {
+   background-color: yellow;
+}

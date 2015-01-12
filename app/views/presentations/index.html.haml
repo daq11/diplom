@@ -1,0 +1,87 @@
+.page-header
+  %h3
+    = (params[:type] == 'my' ? 'Мои' : params[:type] == 'old' ? '«Старые»' : 'Все') + ' презентации'
+    - if params['search']
+      = "(pезультат поиска фрагмента «#{params['search']}»)"
+
+- if params[:type] == 'my' && @old_count > 0 && params['search'].nil?
+  .well.alert-danger
+    %b
+      У Вас имеются «старые» презентации. Возможно, Вам следует удалить их?
+      %div
+        = link_to 'Список «старых» презентаций', presentations_path(type: 'old'), class: 'brand'
+
+- if params[:search].nil?
+  .row
+    .col-xs-12
+      .pull-right
+        = bootstrap_form_tag url: search_presentations_path(type: params[:type]), layout: :inline do |f|
+          = link_to (params[:type] == 'my' ? 'Все' : 'Мои') + ' презентации', presentations_path(type: params[:type] != 'my' ? 'my' : 'none'), class: 'btn btn-primary margin'
+          = f.text_field 'search', hide_label: :true
+          = f.submit "Поиск", class: 'btn btn-primary'
+- else
+  .row
+    .col-xs-12
+      .pull-right
+        = link_to 'Все презентации', presentations_path, class: 'btn btn-primary margin'
+        = link_to 'Мои презентации', presentations_path(type: 'my'), class: 'btn btn-primary margin'
+
+.well{class: params[:type] == 'old' ? 'alert-danger' : 'none', style: 'margin-top: 10px;'}
+    
+  .row.visible-lg.visible-md
+    .col-md-4
+      %b Комментарий
+    .col-offset-md-4.col-md-2.text-center 
+      %b Группы
+    .col-offset-md-6.col-md-2.text-center 
+      %b Последний видимый слайд
+    .col-offset-md-8.col-md-1.text-center 
+      %b Авто- открытие
+    .col-offset-md-9.col-md-3.text-center 
+      %b Операции
+  
+  - @presentations.each do |p|
+    .row.visible-lg.visible-md
+      .col-md-4
+        = p.comment
+      .col-offset-md-4.col-md-2.text-center 
+        = p.private? ? 'Преподаватели' :  p.groups.join(', ')
+      .col-offset-md-6.col-md-2.text-center 
+        - if p.private?
+          = p.document.sections.size
+        - else
+          = "#{p.last_open_slide} (из #{p.document.sections.size})"
+      .col-offset-md-8.col-md-1.text-center 
+        - unless p.private?
+          = p.auto_open ? '+' : '-'
+      .col-offset-md-9.col-md-3.text-center 
+        = link_to awesom('fa fa-eye', title: "#{p.groups.empty? ? 'Смотреть' : 'Смотреть/демонстрировать'} презентацию"), "/presentations/#{p.id}/0/show", class: 'btn btn-xs'
+        = link_to awesom('fa fa-plus', title: 'Создать ещё один вариант для демонстрации'), new_presentation_path(document_id: p.document.id), class: 'btn btn-xs'
+        = link_to awesom('fa fa-database', title: 'Смотреть/редактировать исходный материал'), "http://edu-support.msiu.ru/materials/#{p.document.material_id}", class: 'btn btn-xs'
+        - if p.user == @current_user || @current_user.roles =~ /admin/
+          - unless p.private?
+            = link_to awesom('fa fa-edit', title: "Редактировать параметры презентации"), edit_presentation_path(p), class: 'btn btn-xs'
+          = link_to awesom('fa fa-question', title: "Список вопросов"), questions_path(:presentation_id => p.id), class: 'btn btn-xs'
+          = link_to awesom('fa fa-times', title: 'Удалить'), presentation_path(p), method: :delete, data: { confirm: 'Вы уверены, что этa презентация более не нужна и ссылки на неё отсутствуют?' }, class: 'btn btn-xs btn-danger'
+
+    .row.visible-xs.visible-sm
+      .col-xs-8
+        %b
+          = p.comment
+        = p.for_groups
+        - if p.private?
+          = raw "(#{p.document.sections.size}&nbsp;слайдов)"
+        - else
+          = raw "(открыт&nbsp;#{p.last_open_slide} слайд из&nbsp;#{p.document.sections.size}#{p.auto_open ? '; режим «авто»)' : ')'}"
+
+      .col-offset-xs-8.col-xs-4.text-center 
+        = link_to awesom('fa fa-eye', title: "#{p.groups.empty? ? 'Смотреть' : 'Смотреть/демонстрировать'} презентацию"), "/presentations/#{p.id}/0/show", class: 'btn btn-xs'
+        = link_to awesom('fa fa-plus', title: 'Создать ещё один вариант для демонстрации'), new_presentation_path(document_id: p.document.id), class: 'btn btn-xs'
+        = link_to awesom('fa fa-database', title: 'Смотреть/редактировать исходный материал'), "http://edu-support.msiu.ru/materials/#{p.document.material_id}", class: 'btn btn-xs'
+        - if p.user == @current_user || @current_user.roles =~ /admin/
+          - unless p.private?
+            = link_to awesom('fa fa-edit', title: "Редактировать параметры презентации"), edit_presentation_path(p), class: 'btn btn-xs'
+          = link_to awesom('fa fa-times', title: 'Удалить'), presentation_path(p), method: :delete, data: { confirm: 'Вы уверены, что этa презентация более не нужна и ссылки на неё отсутствуют?' }, class: 'btn btn-xs btn-danger'
+
+.text-center
+  = paginate @presentations

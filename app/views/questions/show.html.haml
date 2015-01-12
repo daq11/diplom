@@ -1,0 +1,25 @@
+#question{"data-question-id" => @question.id}
+  =@question.name
+#answers_list
+  -if @question.answer_type == 0
+    .row
+      .col-xs-8
+        %input#answer.form-control{:type => "text"}
+      .col-xs-4
+        %a#go_answer.btn.btn-default{:href => "#"} Ответить
+  -elsif @question.answer_type == 1
+    -rightAnswerPlace = rand(0..3)
+    -rightAnswer      = @question.getRightAnswerList[rand(@question.getRightAnswerList.length)]
+    -notRightAsnwer   = @question.notRightAnswerList.shuffle
+    -for i in 0...4
+      -if i == rightAnswerPlace
+        -answer = rightAnswer
+      -else
+        -answer = notRightAsnwer[i]
+      .answer{"data-answer" => answer}
+        =answer
+
+
+= link_to 'Изменить', edit_question_path(@question)
+\|
+= link_to 'К списку', questions_path(:presentation_id => @question.presentation_id)

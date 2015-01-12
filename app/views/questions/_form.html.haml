@@ -1,0 +1,49 @@
+%h3='презентации ' + @question.presentation.comment + " (" + @question.presentation.id.to_s + ") "
+
+= form_for @question do |f|
+  - if @question.errors.any?
+    #error_explanation
+      %ul
+        - @question.errors.full_messages.each do |msg|
+          %li= msg
+  .form-group
+    = f.label :name
+    = f.text_area :name, class: "form-control"
+    = f.hidden_field :presentation_id, :value => @question.presentation_id
+
+  .form-group
+    = f.label :position
+    = f.text_field :position, class: "form-control"
+  .form-group
+    = f.label :answer_type
+    = f.select :answer_type, options_for_select(Question.QuestionTypeArray.map.with_index{|k,v| [k, v]}, @question.answer_type),{}, class: "form-control"
+  #answer_container
+    -if !@question.answer_type.nil? && !@question.answer_array.nil?
+      - count = 0
+      - maxKeyInHash = @question.answer_array.max_by{|k,v| k}
+      - count = maxKeyInHash.first.to_i+1 unless maxKeyInHash.nil?
+      %input#currentCount{:type => "hidden", :value => count}/
+      -if @question.answer_type == 0
+        %b
+          Правильные варианты ответа:
+        -@question.answer_array.each do |k, v|
+          %input.form-control{:name => "question[answer_array]["+k.to_s+"]", :type => "text", :value => v.to_s}/
+          %br/
+      -else
+        %b
+          Варианты ответа:
+        -@question.answer_array.each do |k, v|
+          .row
+            .col-xs-8
+              %input.form-control{:name => "question[answer_array]["+k.to_s+"][0]", :type => "text", :value => v['0'].to_s}/
+            .col-xs-4
+              Это правильный ответ:
+              -if v['1'].to_s == 'right'
+                %input.form-control{:checked => "checked", :name => "question[answer_array]["+k.to_s+"][1]", :type => "checkbox", :value => "right"}/
+              -else
+                %input.form-control{:name => "question[answer_array]["+k.to_s+"][1]", :type => "checkbox", :value => "right"}/
+
+  %div
+    %a#add_new_answer{:href => "#"} Добавить ответы
+  .actions
+    = f.submit 'Сохранить', class: "btn btn-default"

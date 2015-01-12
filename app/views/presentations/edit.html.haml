@@ -1,0 +1,16 @@
+.page-header
+  %h3 Редактирование параметров презентации
+
+= bootstrap_form_for @presentation, layout: :horizontal, url: @presentation.new_record? ? presentations_path(document_id: params[:document_id]) : presentation_path(@presentation) do |f|
+
+  = f.alert_message f.error_summary
+
+  = f.text_field :comment, placeholder: @presentation.comment, hide_label: :true, control_col: "col-xs-10 col-md-6"
+  = f.text_field :groups_string, hide_label: :true, control_col: "col-xs-10 col-md-6", placeholder: 'Группы (разделённые пробелом)'
+  = f.number_field :last_open_slide, hide_label: :true, control_col: "col-xs-10 col-md-6", help: 'последний видимый слайд'
+  = f.form_group do
+    = f.check_box :auto_open, label: 'автооткрытие слайдов'
+  = f.form_group do
+    = f.submit 'Сохранить', class: 'btn btn-primary'
+    = link_to 'Отменить', presentations_path, class: 'btn btn-default'
+
